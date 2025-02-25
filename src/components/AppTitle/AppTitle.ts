@@ -7,7 +7,7 @@ export const AppTitle = styled.h1`
   top: 20%;
   font-family: PT Sans, sans-serif;
   font-weight: 700;
-  font-size: min(43px, 3vw);
+  font-size: clamp(16px, 43px, 3vw);
   line-height: 1.2em;
   letter-spacing: 0;
   border-left: 5px solid;
@@ -19,5 +19,9 @@ export const AppTitle = styled.h1`
   -ms-user-select: none;
   @media (max-width: 768px) {
     border: none;
+    padding: 0;
+    position: absolute;
+    top: 5%;
+    left: 10%;
   }
 `;

@@ -8,4 +8,7 @@ export const HorizontalLine = styled.div`
   width: 100vw;
   height: 1px;
   background: #C7CDD9;
+  @media (max-width: 768px) {
+    transform: scaleX(3);
+  }
 `;

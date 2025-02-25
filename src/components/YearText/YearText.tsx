@@ -9,7 +9,7 @@ import Lines from "../Lines/Lines";
 import {AppTitle} from "../AppTitle/AppTitle";
 import {AppBody} from "../AppBody/AppBody";
 import {AppWrapper} from "../AppWrapper/AppWrapper";
-
+import {Navigation} from 'swiper/modules'; // Новый путь для Swiper 9+
 
 const Circle = styled.div`
   position: absolute;
@@ -34,13 +34,28 @@ const Circle = styled.div`
 `;
 
 const YearContainer = styled.h1`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -104%);
   font-family: PT Sans, sans-serif;
   font-weight: 700;
-  font-size: clamp(56px, 10vw, 200px);
+  font-size: clamp(50px, 10vw, 200px);
   display: flex;
   align-items: center;
   justify-content: center;
+  text-align: center;
+  width: 100%;
+  white-space: nowrap;
+  user-select: none;
+
+  @media (max-width: 768px) {
+    width: auto;
+    top: 35%;
+
+  }
 `;
+
 
 const DotLabel = styled.div`
   position: absolute;
@@ -63,6 +78,24 @@ const DotLabel = styled.div`
   }
 `;
 
+const Label = styled.div`
+  position: absolute;
+  top: 47%;
+  width: 80vw;
+  height: 10%;
+  font-family: PT Sans, sans-serif;
+  font-weight: 700;
+  font-size: clamp(12px, 43px, 3vw);
+  text-align: left;
+  color: #42567A;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  @media (min-width: 768px) {
+    display: none;
+  }
+
+`
 const DotsWrapper = styled.div`
   position: absolute;
   width: 100%;
@@ -127,7 +160,18 @@ const PaginationWrapper = styled.div`
   -webkit-user-select: none; /* Для Safari */
   -moz-user-select: none; /* Для Firefox */
   -ms-user-select: none;
+  @media (max-width: 768px) {
+    bottom: 5%;
+    left: 10%;
+    gap: 5px;
+  }
 `;
+
+const PaginationButtons = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: clamp(8px, 2vw, 16px);
+`
 
 const PageNumber = styled.div`
   font-family: PT Sans, sans-serif;
@@ -137,8 +181,8 @@ const PageNumber = styled.div`
 `;
 
 const Button = styled.button`
-  width: 40px;
-  height: 40px;
+  width: clamp(32px, 4vw, 40px); 
+  height: clamp(32px, 4vw, 40px);
   border-radius: 50%;
   border: 1px solid #c7cdd9;
   background: none;
@@ -172,22 +216,26 @@ const DotNumber = styled.span`
 const EventsContainer = styled.div`
   width: 80vw;
   background: transparent;
-  padding-left: 3.5%;
   box-sizing: border-box;
   overflow: hidden;
   position: absolute;
   left: 10%;
-  bottom: 7.5%;
+  bottom: 5%;
   user-select: none;
   -webkit-user-select: none; /* Для Safari */
   -moz-user-select: none; /* Для Firefox */
   -ms-user-select: none;
+  @media (max-width: 768px) {
+    bottom: 30vh;
+    padding: 0;
+  }
 `;
 
 const StyledSwiper = styled(Swiper)`
   width: 100%;
   display: flex;
-
+  padding-left: 5%;
+  box-sizing: border-box;
   @media (max-width: 768px) {
     .swiper-slide {
       transition: opacity 0.3s ease, transform 0.3s ease;
@@ -195,16 +243,48 @@ const StyledSwiper = styled(Swiper)`
 
     .swiper-slide-next {
       opacity: 0.6;
-      transform: scale(0.95);
     }
+
+    .swiper-button-next, .swiper-button-prev {
+      display: none;
+    }
+
   }
 
   .swiper-button-next, .swiper-button-prev {
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
+    background: white;
     border: 1px solid #c7cdd9;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    top: 50%;
     color: #3877EE;
-    z-index: 10;
+    font-size: 70%;
+    font-weight: 1000;
+    transform: translateY(-50%);
   }
+
+  .swiper-button-next {
+    position: absolute;
+    right: 1%;
+  }
+
+  .swiper-button-prev {
+    position: absolute;
+    left: 1%;
+  }
+
+  .swiper-button-prev.swiper-button-disabled, .swiper-button-next.swiper-button-disabled {
+    display: none;
+  }
+
+  .swiper-button-next::after, .swiper-rtl .swiper-button-prev::after, .swiper-button-prev::after, .swiper-rtl .swiper-button-next::after {
+    font-size: 100%;
+  }
+
 
   .swiper-pagination-bullet-active {
     background: #3877EE;
@@ -216,7 +296,12 @@ const EventSlide = styled(SwiperSlide)`
   text-align: left;
   display: flex;
   flex-direction: column;
-  width: max-content;
+  flex-shrink: 1;
+  height: 110px;
+  @media (min-width: 768px) {
+    flex-shrink: 0;
+    height: clamp(100px, 175px, 300px);
+  }
 `;
 
 const EventText = styled.p`
@@ -227,6 +312,10 @@ const EventText = styled.p`
   letter-spacing: 0;
   color: #42567A;
   margin: 0;
+  width: 45vw;
+  @media (min-width: 768px) {
+    width: 20vw  ;
+  }
 `;
 
 
@@ -238,6 +327,53 @@ const EventHeader = styled.h1`
   letter-spacing: 0;
   color: #3877EE;
 `;
+
+const LeftYear = styled.span`
+  color: #3877EE;
+  margin-right: 10%;
+  opacity: 80%;
+  @media (max-width: 768px) {
+    opacity: 100%;
+  }
+`
+const RightYear = styled.span`
+  color: #EF5DA8;
+  margin-left: 0;
+  opacity: 80%;
+  @media (max-width: 768px) {
+    opacity: 100%;
+  }
+`
+
+interface DotProps {
+    active: boolean;
+}
+
+const DotPaginationContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  position: absolute;
+  bottom: 7.5%;
+  @media(min-width: 768px) {
+    display: none;
+  }
+`;
+
+const PaginationDot = styled.span<DotProps>`
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: ${(props) => (props.active ? "#2C3E50" : "#A0AEC0")};
+  cursor: pointer;
+  transition: background 0.3s;
+
+  &:hover {
+    background-color: ${(props) => (props.active ? "#2C3E50" : "#718096")};
+  }
+`;
+
 
 interface eventData {
     year: number;
@@ -377,16 +513,20 @@ const YearComponent = ({dotsData}: YearComponentProps) => {
             <AppBody>
                 <div style={{overflow: 'hidden', display: 'flex', justifyContent: 'center'}}>
                     <AppTitle>Исторические <br/> даты</AppTitle>
+                    <Label>
+                        {dotsData[selectedDot].label}
+                    </Label>
                     <Lines></Lines>
+                    <YearContainer ref={yearRef}>
+                        <LeftYear>
+                            {animatedYearLeft}
+                        </LeftYear>
+                        <RightYear>
+                            {animatedYearRight}
+                        </RightYear>
+                    </YearContainer>
                     <Circle ref={circleRef}>
-                        <YearContainer ref={yearRef}>
-                    <span style={{color: "#3877EE", marginRight: "10%", opacity: '80%'}}>
-                        {animatedYearLeft}
-                    </span>
-                            <span style={{color: "#EF5DA8", marginLeft: "0", opacity: '80%'}}>
-                        {animatedYearRight}
-                    </span>
-                        </YearContainer>
+
                         <DotsWrapper ref={dotsWrapperRef}>
                             {dotsData.map((dot, i) => {
                                 const angle = (-Math.PI / 3) + (i * angleStep * Math.PI) / 180;
@@ -420,18 +560,26 @@ const YearComponent = ({dotsData}: YearComponentProps) => {
                     </Circle>
                     <PaginationWrapper>
                         <PageNumber>{`${selectedDot + 1}/${numDots}`}</PageNumber>
-                        <div style={{display: 'flex', flexDirection: 'row', gap: '20px'}}>
+                        <PaginationButtons>
                             <Button onClick={handlePrev}>{"<"}</Button>
                             <Button onClick={handleNext}>{">"}</Button>
-                        </div>
+                        </PaginationButtons>
                     </PaginationWrapper>
                     <EventsContainer>
                         <StyledSwiper
                             slidesPerView={"auto"}
-                            spaceBetween={40}
+                            spaceBetween={30}
+                            loop={true}
+                            centeredSlide={false}
+                            modules={[Navigation]}
+                            navigation={true}
+                            initialSlide={0}
                             breakpoints={{
                                 768: {
-                                    slidesPerView: 3, // После 768px показываем 2 слайда
+                                    slidesPerView: 3,
+                                    spaceBetween: 20,
+                                    loop: false,
+                                    centeredSlide: false
                                 },
                             }}
                         >
@@ -444,6 +592,17 @@ const YearComponent = ({dotsData}: YearComponentProps) => {
                         </StyledSwiper>
                     </EventsContainer>
                 </div>
+                <DotPaginationContainer>
+                    {
+
+                        dotsData.map((data, index) => {
+                            const angle = (-Math.PI / 3) + (index * angleStep * Math.PI) / 180;
+                            return (
+                                    <PaginationDot active={selectedDot === index} onClick={(event) => handleClick(index, angle, event)}></PaginationDot>
+                            )
+                        })
+                    }
+                </DotPaginationContainer>
             </AppBody>
         </AppWrapper>
     );
